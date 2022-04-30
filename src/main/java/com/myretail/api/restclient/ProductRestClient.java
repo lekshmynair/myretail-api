@@ -6,11 +6,13 @@ import com.myretail.api.restclient.dto.ProductResposeDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.logging.Logger;
 
+@Component
 public class ProductRestClient {
     Logger log = Logger.getLogger(ProductRestClient.class.getName());
 

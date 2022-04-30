@@ -1,17 +1,10 @@
 package com.myretail.api.restclient.dto;
 
 import lombok.*;
+import lombok.Data;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-
+@Data
 public class Product {
-    private @Getter
-    @Setter
-    int tcin;
-    private @Getter
-    @Setter
-    Item item;
-
+    private int tcin;
+    private Item item;
 }
