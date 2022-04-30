@@ -19,7 +19,7 @@ public class ProductController {
     }
 
     @GetMapping("/v1/products")
-    public Product getProduct(@RequestParam(value = "id") int id) {
+    public Product getProduct(@RequestParam(value = "id") int id) throws Throwable{
         log.info("Calling product service using parms, id = " + id);
         return prodService.getProduct(id);
     }

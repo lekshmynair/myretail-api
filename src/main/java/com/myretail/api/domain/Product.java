@@ -1,19 +1,13 @@
 package com.myretail.api.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {
-    private @Getter
-    @Setter
-    int id;
-    private @Getter
-    @Setter
-    String name;
-    private @Getter
-    @Setter
-    CurrentPrice current_price;
+    private int id;
+    private String name;
+    private CurrentPrice current_price;
 
 }
