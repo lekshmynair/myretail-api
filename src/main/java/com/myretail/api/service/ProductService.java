@@ -1,81 +1,68 @@
 package com.myretail.api.service;
 
-import com.myretail.api.cache.CacheStore;
-import com.myretail.api.domain.CurrentPrice;
+import com.myretail.api.domain.Price;
 import com.myretail.api.domain.Product;
+import com.myretail.api.exception.ApplicationException;
+import com.myretail.api.exception.NotFoundException;
 import com.myretail.api.repository.ProductRepository;
-import com.myretail.api.repository.entity.Price;
+import com.myretail.api.repository.entity.PriceEntity;
 import com.myretail.api.restclient.ProductRestClient;
-import com.myretail.api.restclient.dto.ProductResposeDTO;
+import com.myretail.api.restclient.RestClientDelegate;
+import com.myretail.api.restclient.dto.RedskyResposeDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
+
 
 @Service
 public class ProductService {
-    Logger log = Logger.getLogger(ProductService.class.getName());
+    Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
-    ProductRestClient productRestClient;
     ProductRepository productRepository;
+    RestClientDelegate restClientDelegate;
 
-    // CacheStore<ProductResposeDTO> productcache;
-
-    public ProductService(ProductRestClient productRestClient, ProductRepository productRepository) {
-        this.productRestClient = productRestClient;
+    public ProductService(ProductRepository productRepository, RestClientDelegate restClientDelegate) {
+        this.restClientDelegate = restClientDelegate;
         this.productRepository = productRepository;
-
     }
- /*   public ProductService(ProductRestClient productRestClient, ProductRepository productRepository, CacheStore<ProductResposeDTO> productcache) {
-        this.productRestClient = productRestClient;
-        this.productRepository = productRepository;
-        this.productcache = productcache;
-    } */
-    public Product getProduct(int id) throws Throwable {
-        Product prod = null;
-        ProductResposeDTO prodDto = null;
-        Optional<Price> price = null;
 
-        CompletableFuture<ProductResposeDTO> future1  = CompletableFuture.supplyAsync(() -> productRestClient.getProduct(id));
-        CompletableFuture<Optional<Price>> future2 = CompletableFuture.supplyAsync(() -> productRepository.findById(Integer.valueOf(id)));
-       try {
-           prodDto = future1.get();
-           price = future2.get();
+    public Product getProductById(Integer id) {
+        String productName = null;
+        Optional<PriceEntity> priceEntity = null;
+        //Call redsky restclient & getPrice
+        CompletableFuture<String> restClientFuture = CompletableFuture.supplyAsync(() ->
+                restClientDelegate.getProductName(id));
+        CompletableFuture<Optional<PriceEntity>> priceFuture = CompletableFuture.supplyAsync(() ->
+                productRepository.findById(id)).exceptionally(e -> {
+            log.error("Error calling DB for product id : {} {}", id, e);
+            throw new ApplicationException("Error retrieving price from DB", e);
+        });
+        try {
+            productName = restClientFuture.get();
+            priceEntity = priceFuture.get();
         } catch (Throwable e) {
-            throw e.getCause();
-        }
-       /* if (price.isPresent()) {
-            log.info(" id :" + price.get().getProduct_id() + ", " + price.get().getPrice() + ", " + price.get().getCurrency());
-        }*/
-        prod = mapToDomain(prodDto, price);
-        return prod;
-    }
-
-    private Product mapToDomain(ProductResposeDTO prodDto, Optional currPrice) {
-        Product prod = new Product();
-        if (prodDto != null) {
-            prod.setId(prodDto.getData().getProduct().getTcin());
-            prod.setName(prodDto.getData().getProduct().getItem().getProduct_description().getTitle());
-        }
-        CurrentPrice currentPrice = null;
-        if (currPrice.isPresent()) {
-            log.info("price returned from db");
-            Price price = (Price) currPrice.get();
-            log.info("price = " + price);
-            if (price != null) {
-                log.info("price found");
-                currentPrice = new CurrentPrice();
-                currentPrice.setValue(price.getPrice());
-                //log.info("currPrice = " + currentPrice.getValue());
-                currentPrice.setCurrency_code(price.getCurrency());
-                //log.info("currency = " + currentPrice.getCurrency_code());
+            log.error("Error getting product details for {} {}", id, e);
+            if (e.getCause() instanceof NotFoundException) {
+                throw new NotFoundException("Product not found");
+            }else {
+                throw new ApplicationException("Error retrieving product details", e);
             }
         }
-        prod.setCurrent_price(currentPrice);
-        //log.info("product returned :" + prod);
-        return prod;
+        return mapToDomain(id, productName, priceEntity);
     }
 
+    private Product mapToDomain(Integer id, String productName, Optional currPrice) {
+        Product prod = new Product();
+        prod.setId(id);
+        prod.setName(productName);
+        if (currPrice != null && currPrice.isPresent()) {
+            PriceEntity priceEntity = (PriceEntity) currPrice.get();
+            prod.setPrice(new Price(id, priceEntity.getPrice(), priceEntity.getCurrency()));
+        }
+        return prod;
+    }
 }
 

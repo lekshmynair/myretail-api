@@ -1,5 +1,6 @@
 package com.myretail.api.controller;
 
+import com.myretail.api.controller.dto.ErrorDTO;
 import com.myretail.api.exception.ApplicationException;
 import com.myretail.api.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -16,19 +17,17 @@ import java.util.Map;
 public class ProductControllerAdvice {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleProductNotFoundException(NotFoundException e, WebRequest req) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("Timestamp", LocalDateTime.now());
-        body.put("Status", HttpStatus.NOT_FOUND.value());
-        body.put("Message", "Product not found");
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        ErrorDTO error = new ErrorDTO(HttpStatus.NOT_FOUND.value(),
+                "product-not-found", "https://api.myretail.com/product-not-found",
+                "Product not found");
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<Object> handleFatalException(ApplicationException e, WebRequest req) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("Timestamp", LocalDateTime.now());
-        body.put("Status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        body.put("Message", "Error processing the request");
-        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorDTO error = new ErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "internal-server-error", "https://api.myretail.com/internal-server-error",
+                "Error retrieving produt details");
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

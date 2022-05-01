@@ -11,6 +11,7 @@ public class MyRetailConfig {
     @Bean
     public RestTemplate restTemplate() {
         RestTemplateBuilder builder = new RestTemplateBuilder();
+        //TODO: set requestTimeout, readTimeout values
         return builder.build();
     }
 

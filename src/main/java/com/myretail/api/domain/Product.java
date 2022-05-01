@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {
-    private int id;
+    private Integer id;
     private String name;
-    private CurrentPrice current_price;
-
+    private Price price;
 }

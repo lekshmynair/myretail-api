@@ -4,12 +4,11 @@ import lombok.*;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-@Table
+@Table("price")
 @Data
-public class Price {
+public class PriceEntity {
     @PrimaryKey
-    private Integer product_id;
-
+    private Integer id;
     private Double price;
     private String currency;
 

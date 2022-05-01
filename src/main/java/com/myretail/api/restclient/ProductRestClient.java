@@ -2,7 +2,8 @@ package com.myretail.api.restclient;
 
 import com.myretail.api.exception.ApplicationException;
 import com.myretail.api.exception.NotFoundException;
-import com.myretail.api.restclient.dto.ProductResposeDTO;
+import com.myretail.api.restclient.dto.RedskyResposeDTO;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,16 +29,14 @@ public class ProductRestClient {
     private String key;
 
     @Cacheable("products")
-    public ProductResposeDTO getProduct(Integer id) {
+    public RedskyResposeDTO getProduct(Integer id) {
         log.info("calling product api");
-
-        ProductResposeDTO resp = null;
+        RedskyResposeDTO resp = null;
         try {
-            resp = restTemplate.getForObject(getProductURL(id), ProductResposeDTO.class);
+            resp = restTemplate.getForObject(getProductURL(id), RedskyResposeDTO.class);
             log.info("API response : " + resp);
         } catch (HttpClientErrorException e) {
             log.error("Error reading  weather info for id:{} Status code:{} Error:{}", id, e.getRawStatusCode(), e);
-
             if (e.getRawStatusCode() == HttpStatus.NOT_FOUND.value()) {
                 throw new NotFoundException("Product not found");
             } else {
@@ -46,6 +45,7 @@ public class ProductRestClient {
         }
         return resp;
     }
+
 
     private String getProductURL(Integer id) {
         StringBuilder prodURL = new StringBuilder();
