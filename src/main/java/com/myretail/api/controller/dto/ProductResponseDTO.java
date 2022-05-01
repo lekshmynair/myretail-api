@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Response DTO for the getproduct controller method
+ */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductResponseDTO {

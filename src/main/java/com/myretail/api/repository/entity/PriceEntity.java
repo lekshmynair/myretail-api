@@ -4,13 +4,15 @@ import lombok.*;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+/**
+ * Entity for Price table
+ */
 @Table("price")
 @Data
 @AllArgsConstructor
 public class PriceEntity {
     @PrimaryKey
-    private Integer id;
-    private Double price;
-    private String currency;
-
+    protected Integer id;
+    protected Double price;
+    protected String currency;
 }

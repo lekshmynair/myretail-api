@@ -22,8 +22,10 @@ import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * ProductService unit test cases
+ */
 class ProductServiceTest {
-
     RestClientDelegate restClientDelegate = Mockito.mock(RestClientDelegate.class);
     ProductRepository productRepository = Mockito.mock(ProductRepository.class);
     ProductService productService;
@@ -37,7 +39,9 @@ class ProductServiceTest {
     void tearDown() {
     }
 
-    // test for happy path - returns product info from redsky  and price from db
+    /**
+     * Test case to validate  happy path - returns product info from redsky  and price from db
+     */
     @Test
     void getProductById_product_price_present() {
         Integer id = 13860428;
@@ -53,7 +57,9 @@ class ProductServiceTest {
         Assertions.assertEquals(product.getPrice().getValue(), 13.49);
     }
 
-    // test for product info returned from redsky and price not setup
+    /**
+     * Test case to test scenario where product info is returned if product exists in redsky with no proce when price not setup
+     */
     @Test
     void getProductById_product_present_price_not_present() {
         Integer id = 13264003;
@@ -67,7 +73,9 @@ class ProductServiceTest {
         Assertions.assertEquals(product.getPrice(), null);
     }
 
-    // Test to validate that it returns not found exception when product does not exist in redsky
+    /**
+     * Test case to validate that service returns not found exception when product does not exist in redsky
+     */
     @Test
     void getProductById_product_not_present() {
         Integer id = 123456;
@@ -84,7 +92,9 @@ class ProductServiceTest {
         }
     }
 
-    // any other exceptions thrown from redsky or from repo method should throw Application exception
+    /**
+     * Test case to validate that when exceptions thrown from redsky or from repo method, it throws Application exception
+     */
     @Test
     void getProductById_application_exception() {
     Integer id = 123456;
@@ -101,5 +111,3 @@ class ProductServiceTest {
         }
     }
 }
-
-

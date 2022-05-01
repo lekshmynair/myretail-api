@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-
+/**
+ * This
+ */
 @Service
 public class ProductService {
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
@@ -29,10 +31,16 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     *
+     * @param id : product id
+     * @return Product details
+     */
     public Product getProductById(Integer id) {
         String productName = null;
         Optional<PriceEntity> priceEntity = null;
-        //Call redsky restclient & getPrice
+
+        //Call redsky restclient & getPrice in parallel to reduce response time
         CompletableFuture<String> restClientFuture = CompletableFuture.supplyAsync(() ->
                 restClientDelegate.getProductName(id));
         CompletableFuture<Optional<PriceEntity>> priceFuture = CompletableFuture.supplyAsync(() ->
@@ -43,13 +51,13 @@ public class ProductService {
             priceEntity = priceFuture.get();
         } catch (Throwable e) {
             log.error("Error getting product details for {} {}", id, e);
-            if (e.getCause() instanceof NotFoundException) {
+            if (e.getCause() instanceof NotFoundException) {  //item not found in redsky
                 throw new NotFoundException("Product not found");
             } else {
-                throw new ApplicationException("Error retrieving product details", e);
+                throw new ApplicationException("Error retrieving product details", e); //error calling redsky or db
             }
         }
-        return mapToDomain(id, productName, priceEntity);
+        return mapToDomain(id, productName, priceEntity); //convert DTOs to domain
     }
 
     private Product mapToDomain(Integer id, String productName, Optional currPrice) {

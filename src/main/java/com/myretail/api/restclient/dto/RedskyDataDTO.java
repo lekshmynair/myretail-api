@@ -1,6 +1,11 @@
 package com.myretail.api.restclient.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 @lombok.Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RedskyDataDTO {
-    private RedskyProductDTO product;
+    protected RedskyProductDTO product;
 }

@@ -9,12 +9,16 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+/**
+ * Controller Advice to handle exceptions from the controller
+ */
 @ControllerAdvice
 public class ProductControllerAdvice {
+    /**
+     * @param e   exception
+     * @param req webrequest
+     * @return ErrorDTO with error details
+     */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleProductNotFoundException(NotFoundException e, WebRequest req) {
         ErrorDTO error = new ErrorDTO(HttpStatus.NOT_FOUND.value(),
@@ -23,7 +27,12 @@ public class ProductControllerAdvice {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ApplicationException.class)
+    /**
+     * @param e   exception
+     * @param req webrequest
+     * @return ErrorDTO with error detail
+     */
+    @ExceptionHandler({ApplicationException.class, Exception.class})
     public ResponseEntity<Object> handleFatalException(ApplicationException e, WebRequest req) {
         ErrorDTO error = new ErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "internal-server-error", "https://api.myretail.com/internal-server-error",

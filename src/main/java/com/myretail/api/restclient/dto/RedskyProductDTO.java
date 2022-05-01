@@ -1,9 +1,13 @@
 package com.myretail.api.restclient.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RedskyProductDTO {
-    private Integer tcin;
-    private RedskyItemDTO item;
+    protected Integer tcin;
+    protected RedskyItemDTO item;
 }

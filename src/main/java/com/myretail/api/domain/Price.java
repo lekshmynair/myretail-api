@@ -2,10 +2,13 @@ package com.myretail.api.domain;
 
 import lombok.*;
 
+/**
+ * Price - Domain info
+ */
 @Data
 @AllArgsConstructor
 public class Price {
-    Integer productId;
-    Double value;
-    String currencyCode;
+    protected Integer productId;
+    protected Double value;
+    protected String currencyCode;
 }

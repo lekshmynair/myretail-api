@@ -6,13 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * RestClient Delegate called from ProductService
+ */
 @Component
 public class RestClientDelegate {
 
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     ProductRestClient productRestClient;
-
 
     public RestClientDelegate(ProductRestClient productRestClient) {
         this.productRestClient = productRestClient;
@@ -23,6 +25,7 @@ public class RestClientDelegate {
         return productRestClient.getProduct(id).getData().getProduct().getItem().getProductDescription().getTitle();
     }
 
+    // Circuitbreaker fallback method
     public RedskyResposeDTO getProductFallback(Integer id, Exception e) {
         log.error("CircuitBreaker tripped. Id= {}", id);
         return null;
