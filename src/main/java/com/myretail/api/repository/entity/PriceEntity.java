@@ -6,6 +6,7 @@ import org.springframework.data.cassandra.core.mapping.Table;
 
 @Table("price")
 @Data
+@AllArgsConstructor
 public class PriceEntity {
     @PrimaryKey
     private Integer id;

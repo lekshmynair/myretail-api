@@ -18,6 +18,7 @@ public class ProductRestClient {
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     RestTemplate restTemplate;
+
     public ProductRestClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
