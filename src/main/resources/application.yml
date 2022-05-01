@@ -2,7 +2,7 @@
 server:
   port: 8081
 redsky:
-  baseUrl: https://bedsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=
+  baseUrl: https://redsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=
   key: 3yUxt7WltYG7MFKPp7uyELi1K40ad2ys
   # ${redsky.key:3yUxt7WltYG7MFKPp7uyELi1K40ad2ys}
 spring:

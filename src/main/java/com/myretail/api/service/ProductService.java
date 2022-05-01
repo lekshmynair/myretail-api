@@ -36,10 +36,8 @@ public class ProductService {
         CompletableFuture<String> restClientFuture = CompletableFuture.supplyAsync(() ->
                 restClientDelegate.getProductName(id));
         CompletableFuture<Optional<PriceEntity>> priceFuture = CompletableFuture.supplyAsync(() ->
-                productRepository.findById(id)).exceptionally(e -> {
-            log.error("Error calling DB for product id : {} {}", id, e);
-            throw new ApplicationException("Error retrieving price from DB", e);
-        });
+                productRepository.findById(id));
+
         try {
             productName = restClientFuture.get();
             priceEntity = priceFuture.get();
@@ -47,7 +45,7 @@ public class ProductService {
             log.error("Error getting product details for {} {}", id, e);
             if (e.getCause() instanceof NotFoundException) {
                 throw new NotFoundException("Product not found");
-            }else {
+            } else {
                 throw new ApplicationException("Error retrieving product details", e);
             }
         }
