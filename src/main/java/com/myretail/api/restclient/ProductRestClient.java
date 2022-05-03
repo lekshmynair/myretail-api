@@ -36,7 +36,6 @@ public class ProductRestClient {
         try {
             resp = restTemplate.getForObject(url, RedskyResposeDTO.class);
         } catch (HttpClientErrorException e) {
-            log.error("Error reading  weather info for id:{} Status code:{} Error:{}", id, e.getRawStatusCode(), e);
             if (e.getRawStatusCode() == HttpStatus.NOT_FOUND.value()) {
                 throw new NotFoundException("Product not found");
             } else {

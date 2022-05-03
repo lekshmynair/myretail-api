@@ -1,0 +1,22 @@
+redsky:
+  baseUrl: https://redsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=
+  key: 3yUxt7WltYG7MFKPp7uyELi1K40ad2ys
+
+spring:
+  data:
+    cassandra:
+      keyspace-name: myretail
+      contact-points: 0.0.0
+      port: 9042
+      local-datacenter: datacenter1
+
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 100
+        permittedNumberOfCallsInHalfOpenState: 10
+        waitDurationInOpenState: 10
+        failureRateThreshold: 50
+        registerHealthIndicator: true

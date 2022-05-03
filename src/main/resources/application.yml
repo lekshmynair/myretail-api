@@ -5,13 +5,26 @@ redsky:
   baseUrl: https://redsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=
   key: 3yUxt7WltYG7MFKPp7uyELi1K40ad2ys
   # ${redsky.key:3yUxt7WltYG7MFKPp7uyELi1K40ad2ys}
-spring:
-  data:
-    cassandra:
-      keyspace-name: myretail
-      contact-points: 0.0.0.0
-      port: 9042
-      local-datacenter: datacenter1
+
+management:
+  metrics:
+    web:
+      server:
+        request:
+          autotime:
+            percentiles:
+              - 0.95
+              - 0.99
+            percentiles-histogram: true
+
+  endpoint:
+    metrics:
+      enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 resilience4j:
   circuitbreaker:
@@ -22,3 +35,9 @@ resilience4j:
         waitDurationInOpenState: 10
         failureRateThreshold: 50
         registerHealthIndicator: true
+        ignoreExceptions: com.myretail.api.exception.NotFoundException
+        recordExceptions: com.myretail.api.exception.ApplicationException
+
+    instances:
+      redsky:
+        baseConfig: default

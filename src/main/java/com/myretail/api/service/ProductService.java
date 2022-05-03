@@ -32,7 +32,6 @@ public class ProductService {
     }
 
     /**
-     *
      * @param id : product id
      * @return Product details
      */
@@ -50,7 +49,6 @@ public class ProductService {
             productName = restClientFuture.get();
             priceEntity = priceFuture.get();
         } catch (Throwable e) {
-            log.error("Error getting product details for {} {}", id, e);
             if (e.getCause() instanceof NotFoundException) {  //item not found in redsky
                 throw new NotFoundException("Product not found");
             } else {

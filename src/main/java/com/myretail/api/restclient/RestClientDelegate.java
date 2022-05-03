@@ -1,5 +1,7 @@
 package com.myretail.api.restclient;
 
+import com.myretail.api.exception.ApplicationException;
+import com.myretail.api.exception.NotFoundException;
 import com.myretail.api.restclient.dto.RedskyResposeDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.slf4j.Logger;
@@ -20,14 +22,14 @@ public class RestClientDelegate {
         this.productRestClient = productRestClient;
     }
 
-    @CircuitBreaker(name = "getProduct", fallbackMethod = "getProductFallback")
+    @CircuitBreaker(name = "redsky", fallbackMethod = "getProductFallback")
     public String getProductName(Integer id) {
         return productRestClient.getProduct(id).getData().getProduct().getItem().getProductDescription().getTitle();
     }
 
     // Circuitbreaker fallback method
-    public RedskyResposeDTO getProductFallback(Integer id, Exception e) {
+    public String getProductFallback(Integer id, ApplicationException e) {
         log.error("CircuitBreaker tripped. Id= {}", id);
-        return null;
+        throw new ApplicationException("CircuitBreaker tripped");
     }
 }
