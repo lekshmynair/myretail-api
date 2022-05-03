@@ -32,6 +32,7 @@ public class ProductResponseMapper {
             if (product.getPrice() == null) {
                 warnings.add(new WarningDTO(HttpStatus.PARTIAL_CONTENT.value(), "Price not found"));
             }
+            prodResponse.setWarnings(warnings);
         }
         return prodResponse;
     }
