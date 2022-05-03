@@ -37,8 +37,8 @@ sourceSets {
 	}
 }
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.5.7'
+	implementation 'org.springframework.boot:spring-boot-starter-aop:2.5.7'
 
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
@@ -51,6 +51,8 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-core:1.8.1'
+
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.4'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
