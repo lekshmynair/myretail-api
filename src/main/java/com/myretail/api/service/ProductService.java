@@ -1,14 +1,13 @@
 package com.myretail.api.service;
 
+import com.myretail.api.controller.dto.PriceDTO;
 import com.myretail.api.domain.Price;
 import com.myretail.api.domain.Product;
 import com.myretail.api.exception.ApplicationException;
 import com.myretail.api.exception.NotFoundException;
 import com.myretail.api.repository.ProductRepository;
 import com.myretail.api.repository.entity.PriceEntity;
-import com.myretail.api.restclient.ProductRestClient;
 import com.myretail.api.restclient.RestClientDelegate;
-import com.myretail.api.restclient.dto.RedskyResposeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -58,6 +57,18 @@ public class ProductService {
         return mapToDomain(id, productName, priceEntity); //convert DTOs to domain
     }
 
+    public Product updatePrice(Integer id, PriceDTO price) {
+        //read product info from Redsky
+        String productName = null;
+        Optional<PriceEntity> priceEntity = Optional.empty();
+
+        productName = restClientDelegate.getProductName(id);
+        PriceEntity entity = mapFromPriceDto(id, price);
+        PriceEntity updatedPrice = productRepository.save(entity);
+        priceEntity = Optional.of(updatedPrice);
+        return mapToDomain(id, productName, priceEntity); //convert DTOs to domain
+    }
+
     private Product mapToDomain(Integer id, String productName, Optional currPrice) {
         Product prod = new Product();
         prod.setId(id);
@@ -67,6 +78,14 @@ public class ProductService {
             prod.setPrice(new Price(id, priceEntity.getPrice(), priceEntity.getCurrency()));
         }
         return prod;
+    }
+
+    private PriceEntity mapFromPriceDto(Integer id, PriceDTO price) {
+        PriceEntity entity = new PriceEntity();
+        entity.setId(id);
+        entity.setPrice(price.getValue());
+        entity.setCurrency(price.getCurrencyCode());
+        return entity;
     }
 }
 

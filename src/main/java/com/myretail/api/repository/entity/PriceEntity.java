@@ -10,6 +10,7 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @Table("price")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class PriceEntity {
     @PrimaryKey
     protected Integer id;

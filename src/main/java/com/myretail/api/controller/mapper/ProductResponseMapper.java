@@ -1,6 +1,6 @@
 package com.myretail.api.controller.mapper;
 
-import com.myretail.api.controller.dto.PriceResponseDTO;
+import com.myretail.api.controller.dto.PriceDTO;
 import com.myretail.api.controller.dto.ProductResponseDTO;
 import com.myretail.api.controller.dto.WarningDTO;
 import com.myretail.api.domain.Product;
@@ -20,7 +20,7 @@ public class ProductResponseMapper {
         prodResponse.setName(product.getName());
 
         if (product.getPrice() != null) {
-            prodResponse.setCurrentPrice(new PriceResponseDTO(product.getPrice().getValue(),
+            prodResponse.setCurrentPrice(new PriceDTO(product.getPrice().getValue(),
                     product.getPrice().getCurrencyCode()));
         }
 

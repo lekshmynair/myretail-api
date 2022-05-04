@@ -2,6 +2,7 @@ package com.myretail.api.controller;
 
 import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema;
 import com.myretail.api.controller.dto.ErrorDTO;
+import com.myretail.api.controller.dto.PriceDTO;
 import com.myretail.api.controller.dto.ProductResponseDTO;
 import com.myretail.api.controller.mapper.ProductResponseMapper;
 import com.myretail.api.domain.Product;
@@ -21,6 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
 /**
  * Controller for the Product APIs
  */
@@ -48,7 +52,7 @@ public class ProductController {
             @ApiResponse(responseCode = "206", description = "Partial response", content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = ProductResponseDTO.class))}),
             @ApiResponse(responseCode = "500", description = "Error retrieving product", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorDTO.class))}) })
+                    schema = @Schema(implementation = ErrorDTO.class))})})
 
     @GetMapping("/v1/products/{id}")
     @MyRetailLoggable
@@ -60,5 +64,19 @@ public class ProductController {
             return new ResponseEntity(dto, HttpStatus.PARTIAL_CONTENT);
         }
         return new ResponseEntity(dto, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/v1/products/{id}", consumes = {"application/json"}, produces = {"application/json"})
+    @ResponseBody
+    @MyRetailLoggable
+    @Timed(value = "myretail.api.put")
+    public ProductResponseDTO updateProduct(@Valid @RequestBody PriceDTO priceDto,
+                                            @PathVariable(value = "id") Integer id)
+            throws Throwable {
+        if (priceDto.getCurrencyCode() == null) priceDto.setCurrencyCode("USD");
+
+        Product prod = prodService.updatePrice(id, priceDto);
+        ProductResponseDTO dto = ProductResponseMapper.mapToDTO(prod);
+        return dto;
     }
 }

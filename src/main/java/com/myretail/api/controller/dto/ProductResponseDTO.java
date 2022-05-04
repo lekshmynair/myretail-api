@@ -2,8 +2,6 @@ package com.myretail.api.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.myretail.api.domain.Price;
 import lombok.Data;
 
 import java.util.List;
@@ -18,7 +16,7 @@ public class ProductResponseDTO {
     String name;
 
     @JsonProperty("current_price")
-    PriceResponseDTO currentPrice;
+    PriceDTO currentPrice;
 
     List<WarningDTO> warnings;
 }
