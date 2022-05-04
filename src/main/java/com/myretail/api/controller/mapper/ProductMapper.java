@@ -3,6 +3,7 @@ package com.myretail.api.controller.mapper;
 import com.myretail.api.controller.dto.PriceDTO;
 import com.myretail.api.controller.dto.ProductResponseDTO;
 import com.myretail.api.controller.dto.WarningDTO;
+import com.myretail.api.domain.Price;
 import com.myretail.api.domain.Product;
 import org.springframework.http.HttpStatus;
 
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * To combine the product details returned from redsky api and price info from repo method into product repsonse DTO
  */
-public class ProductResponseMapper {
+public class ProductMapper {
 
     public static ProductResponseDTO mapToDTO(Product product) {
         ProductResponseDTO prodResponse = new ProductResponseDTO();
@@ -36,5 +37,10 @@ public class ProductResponseMapper {
         }
         return prodResponse;
     }
+
+    public static Price mapPriceRequestToDomain(Integer productId, PriceDTO priceDto) {
+        return new Price(productId, priceDto.getValue(), priceDto.getCurrencyCode());
+    }
+
 }
 

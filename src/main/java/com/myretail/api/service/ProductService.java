@@ -57,16 +57,12 @@ public class ProductService {
         return mapToDomain(id, productName, priceEntity); //convert DTOs to domain
     }
 
-    public Product updatePrice(Integer id, PriceDTO price) {
-        //read product info from Redsky
-        String productName = null;
-        Optional<PriceEntity> priceEntity = Optional.empty();
-
-        productName = restClientDelegate.getProductName(id);
-        PriceEntity entity = mapFromPriceDto(id, price);
+    public Product updatePrice(Price price) {
+        String productName = productName = restClientDelegate.getProductName(price.getProductId());
+        PriceEntity entity = new PriceEntity(price.getProductId(), price.getValue(), price.getCurrencyCode());
         PriceEntity updatedPrice = productRepository.save(entity);
-        priceEntity = Optional.of(updatedPrice);
-        return mapToDomain(id, productName, priceEntity); //convert DTOs to domain
+        Optional<PriceEntity> priceEntity = Optional.of(updatedPrice);
+        return mapToDomain(price.getProductId(), productName, priceEntity); //convert DTOs to domain
     }
 
     private Product mapToDomain(Integer id, String productName, Optional currPrice) {
@@ -78,14 +74,6 @@ public class ProductService {
             prod.setPrice(new Price(id, priceEntity.getPrice(), priceEntity.getCurrency()));
         }
         return prod;
-    }
-
-    private PriceEntity mapFromPriceDto(Integer id, PriceDTO price) {
-        PriceEntity entity = new PriceEntity();
-        entity.setId(id);
-        entity.setPrice(price.getValue());
-        entity.setCurrency(price.getCurrencyCode());
-        return entity;
     }
 }
 

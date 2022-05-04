@@ -1,10 +1,10 @@
 package com.myretail.api.controller;
 
-import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema;
 import com.myretail.api.controller.dto.ErrorDTO;
 import com.myretail.api.controller.dto.PriceDTO;
 import com.myretail.api.controller.dto.ProductResponseDTO;
-import com.myretail.api.controller.mapper.ProductResponseMapper;
+import com.myretail.api.controller.mapper.ProductMapper;
+import com.myretail.api.domain.Price;
 import com.myretail.api.domain.Product;
 import com.myretail.api.annotation.MyRetailLoggable;
 import com.myretail.api.service.ProductService;
@@ -15,11 +15,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jdk.jfr.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +57,7 @@ public class ProductController {
     @Timed(value = "myretail.api.get")
     public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable(value = "id") Integer id) throws Throwable {
         Product prod = prodService.getProductById(id);
-        ProductResponseDTO dto = ProductResponseMapper.mapToDTO(prod);
+        ProductResponseDTO dto = ProductMapper.mapToDTO(prod);
         if (dto.getCurrentPrice() == null) {
             return new ResponseEntity(dto, HttpStatus.PARTIAL_CONTENT);
         }
@@ -75,8 +73,10 @@ public class ProductController {
             throws Throwable {
         if (priceDto.getCurrencyCode() == null) priceDto.setCurrencyCode("USD");
 
-        Product prod = prodService.updatePrice(id, priceDto);
-        ProductResponseDTO dto = ProductResponseMapper.mapToDTO(prod);
+        Price price = ProductMapper.mapPriceRequestToDomain(id, priceDto);
+
+        Product prod = prodService.updatePrice(price);
+        ProductResponseDTO dto = ProductMapper.mapToDTO(prod);
         return dto;
     }
 }
