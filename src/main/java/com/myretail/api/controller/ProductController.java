@@ -52,7 +52,7 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Error retrieving product", content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = ErrorDTO.class))})})
 
-    @GetMapping("/v1/products/{id}")
+    @GetMapping("/products/v1/{id}")
     @MyRetailLoggable
     @Timed(value = "myretail.api.get")
     public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable(value = "id") Integer id) throws Throwable {
@@ -64,7 +64,7 @@ public class ProductController {
         return new ResponseEntity(dto, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/v1/products/{id}", consumes = {"application/json"}, produces = {"application/json"})
+    @PutMapping(value = "/products/v1/{id}", consumes = {"application/json"}, produces = {"application/json"})
     @ResponseBody
     @MyRetailLoggable
     @Timed(value = "myretail.api.put")

@@ -1,5 +1,5 @@
-# myretail-api
-include an overview
+# Myretail API
+Myretail-api aggregates product information from Target's RedskyAPI along with its price details from a cassandra datastore, and returns a JSON object to the caller. It also allows updating the price for a product that exists in Redsky.
 
 ## Tech Stack
 - SpringBoot with Java 11
@@ -24,21 +24,32 @@ Once Cassandra is up and running, execute the following CSQLs to setup environme
 
 Step 1: Setup keyspace
 ``` 
-CREATE KEYSPACE
+CREATE KEYSPACE myretail WITH replication = {'class':'SimpleStrategy', 'replication_factor': 3};
+
 ```
 Step 2: Create table
 ```
-????
+Use use myretail;
+ create table price (
+        id int primary key , 
+        price double, 
+       currency text,
+        modified_timestamp  timestamp
+        );
 ```
 Step 3: Populate table
 ``` 
-???
+insert into price (id, price, currency, modified_timestamp) 
+values(13860428, 13.49, 'USD', '2022-04-28 04:00:00+0000');
+insert into price (id, price, currency, modified_timestamp) 
+values(54456119, 25.55, 'USD', '2022-04-28 04:00:00+0000');
+
 ```
 ### Running the Application
 
 Step 1:  Clone GIT Repo
 ``` 
-git clone ???
+git clone git@github.com:lekshmynair/myretail-api.git
 ```
 
 Step 2:  Build the app
@@ -60,7 +71,7 @@ spring.profiles.active=local
 ### Testing the API
 
 Request:
-- GET - http://localhost:8081/v1/products/13860428
+- GET - http://localhost:8081/products/v1/13860428
 
 Response (200):
 ```
@@ -73,7 +84,55 @@ Response (200):
 	}
 }
 ```
+Request:
+- GET - http://localhost:8081/products/v1/13860423
 
+Response (206):
+```
+{
+	"id": 12954218,
+	"name": "Kraft Macaroni &#38; Cheese Dinner Original - 7.25oz",
+	"warnings": [
+		{
+			"code": 206,
+			"description": "Price not found"
+		}
+	]
+}
+```
+Request:
+- GET - http://localhost:8081/products/v1/123234
+
+Response (404):
+```
+{
+	"status": 404,
+	"title": "product-not-found",
+	"type": "https://api.myretail.com/product-not-found",
+	"detail": "Product not found"
+}
+```
+Request:
+- PUT - http://localhost:8081/products/v1/13860428
+
+Request Body :
+```
+{
+    "value": 109.99,
+	"currency_code" : "USD"
+}
+```
+Response (200)
+```
+{
+	"id": 13860428,
+	"name": "The Big Lebowski (Blu-ray)",
+	"current_price": {
+		"value": 109.99,
+		"currency_code": "USD"
+	}
+}
+```
 ## Future Enhancements for Prod Readiness
 - Caching
   - Switch to an implementation like Redis
@@ -92,4 +151,4 @@ Response (200):
   - Scale horizontally 
   - Load balance across regions
   - Use reactive stack to reduce hardware resources
-  - 
+  

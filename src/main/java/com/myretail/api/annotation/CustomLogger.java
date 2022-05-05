@@ -20,12 +20,12 @@ import java.util.Arrays;
 @Component
 public class CustomLogger {
     Logger log = LoggerFactory.getLogger(CustomLogger.class.getName());
+    ObjectMapper mapper = new ObjectMapper();
 
     @Around("@annotation(MyRetailLoggable)")
     public Object logExecutionTime(ProceedingJoinPoint jp) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = jp.proceed();
-        ObjectMapper mapper = new ObjectMapper();
         long execTime = System.currentTimeMillis() - start;
         try {
             log.info("Request : {}, Method: {}, Result: {}, Execution Time: {} millis", Arrays.toString(jp.getArgs()), jp.getSignature(),

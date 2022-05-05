@@ -43,7 +43,7 @@ public class MyretailIntegrationTest {
 
     @Test
     public void test_product_found_ok() throws Exception {
-        URI uri = new URI("/v1/products/" + PRODUCT_WITH_PRICE);
+        URI uri = new URI("/products/v1/" + PRODUCT_WITH_PRICE);
 
         mvc.perform(get(uri)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -55,7 +55,7 @@ public class MyretailIntegrationTest {
 
     @Test
     public void test_product_found_price_not_found() throws Exception {
-        URI uri = new URI("/v1/products/" + PRODUCT_WITH_NO_PRICE);
+        URI uri = new URI("/products/v1/" + PRODUCT_WITH_NO_PRICE);
 
         mvc.perform(get(uri)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -67,7 +67,7 @@ public class MyretailIntegrationTest {
 
     @Test
     public void test_product_not_found() throws Exception {
-        URI uri = new URI("/v1/products/" + PRODUCT_INVALID);
+        URI uri = new URI("/products/v1/" + PRODUCT_INVALID);
 
         mvc.perform(get(uri)
                         .contentType(MediaType.APPLICATION_JSON))
