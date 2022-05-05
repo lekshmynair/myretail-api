@@ -76,12 +76,12 @@ Request:
 Response (200):
 ```
 {
-	"id": 13860428,
-	"name": "The Big Lebowski (Blu-ray)",
-	"current_price": {
-		"value": 19.99,
-		"currency_code": "USD"
-	}
+    "id": 13860428,
+    "name": "The Big Lebowski (Blu-ray)",
+    "current_price": {
+    	"value": 19.99,
+    	"currency_code": "USD"
+    }
 }
 ```
 Request:
@@ -90,14 +90,14 @@ Request:
 Response (206):
 ```
 {
-	"id": 12954218,
-	"name": "Kraft Macaroni &#38; Cheese Dinner Original - 7.25oz",
-	"warnings": [
-		{
-			"code": 206,
-			"description": "Price not found"
-		}
-	]
+    "id": 12954218,
+    "name": "Kraft Macaroni &#38; Cheese Dinner Original - 7.25oz",
+    "warnings": [
+    	{
+    	    "code": 206,
+    	    "description": "Price not found"
+        }
+    ]
 }
 ```
 Request:
@@ -106,10 +106,10 @@ Request:
 Response (404):
 ```
 {
-	"status": 404,
-	"title": "product-not-found",
-	"type": "https://api.myretail.com/product-not-found",
-	"detail": "Product not found"
+    "status": 404,
+    "title": "product-not-found",
+    "type": "https://api.myretail.com/product-not-found",
+    "detail": "Product not found"
 }
 ```
 Request:
@@ -119,18 +119,18 @@ Request Body :
 ```
 {
     "value": 109.99,
-	"currency_code" : "USD"
+    "currency_code" : "USD"
 }
 ```
 Response (200)
 ```
 {
-	"id": 13860428,
-	"name": "The Big Lebowski (Blu-ray)",
-	"current_price": {
-		"value": 109.99,
-		"currency_code": "USD"
-	}
+    "id": 13860428,
+    "name": "The Big Lebowski (Blu-ray)",
+    "current_price": {
+         "value": 109.99,
+         "currency_code": "USD"
+    }
 }
 ```
 ## Future Enhancements for Prod Readiness
