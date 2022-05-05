@@ -5,7 +5,6 @@ redsky:
   baseUrl: https://redsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=
   key: ${redsky_key:3yUxt7WltYG7MFKPp7uyELi1K40ad2ys}
 
-
 management:
   metrics:
     web:
